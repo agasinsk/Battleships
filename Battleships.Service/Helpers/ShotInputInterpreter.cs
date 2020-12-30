@@ -1,0 +1,45 @@
+﻿using System;
+
+namespace Battleships.Service.Helpers
+{
+    public class ShotInputInterpreter
+    {
+        public static (int x, int y) GetFieldCoordinates(string input)
+        {
+            ValidateInputOrThrow(input);
+
+            var x = ConvertAsciiLetterToInt32(input[0]);
+            var y = int.Parse(input.Substring(1, input.Length - 1));
+
+            return (x, y);
+        }
+
+        private static int ConvertAsciiLetterToInt32(char letter)
+        {
+            return Convert.ToInt32(letter) - (char.IsUpper(letter) ? 65 : 97) + 1;
+        }
+
+        private static void ValidateInputOrThrow(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                throw new ArgumentException("Input cannot be empty");
+            }
+
+            if (input.Length < 2)
+            {
+                throw new ArgumentException("Input must be at least 2 characters long");
+            }
+
+            if (!char.IsLetter(input[0]))
+            {
+                throw new ArgumentException("First character must be a letter");
+            }
+
+            if (!char.IsDigit(input[1]))
+            {
+                throw new ArgumentException("First character must be a letter");
+            }
+        }
+    }
+}

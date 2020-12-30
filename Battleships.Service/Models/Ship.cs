@@ -1,4 +1,5 @@
-﻿using Battleships.Service.Models.Enums;
+﻿using Battleships.Service.Extensions;
+using Battleships.Service.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,7 @@ namespace Battleships.Service.Models
 
         public GameField StartField { get; set; }
 
-        public IEnumerable<GameField> Fields => Enumerable.Range(Orientation == OrientationType.Horizontal ? StartField.X : StartField.Y, Size)
-                 .Select(p => new GameField(
-                     Orientation == OrientationType.Horizontal ? p : StartField.X,
-                     Orientation == OrientationType.Horizontal ? StartField.Y : p))
-                 .ToList();
+        public IEnumerable<GameField> Fields => StartField.Expand(Orientation, Size);
 
         protected Ship(OrientationType orientation, GameField startField)
         {
