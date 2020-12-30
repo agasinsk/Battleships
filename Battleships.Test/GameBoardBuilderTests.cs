@@ -1,4 +1,4 @@
-using Battleships.Service.Models;
+using Battleships.Service.Builders;
 using Battleships.Service.Models.Enums;
 using FluentAssertions;
 using System.Linq;
@@ -10,6 +10,9 @@ namespace Battleships.Test
     {
         [Theory]
         [InlineData(10, 1, 2)]
+        [InlineData(10, 2, 3)]
+        [InlineData(10, 3, 3)]
+        [InlineData(10, 6, 0)]
         [InlineData(15, 2, 3)]
         [InlineData(20, 0, 0)]
         public void Should_BuildGameBoard_WithSpecifiedCriteria(int gridSize, int battleshipsCount, int destroyersCount)
@@ -17,8 +20,7 @@ namespace Battleships.Test
             // Arrange
 
             // Act
-            GameBoard gameBoard = GameBoardBuilder
-                .WithGridSize(gridSize)
+            var gameBoard = new GameBoardBuilder(gridSize)
                 .WithShips(battleshipsCount, ShipType.Battleship)
                 .WithShips(destroyersCount, ShipType.Destroyer)
                 .Build();
@@ -32,8 +34,10 @@ namespace Battleships.Test
             gameBoard.Ships.Where(x => x.ShipType == ShipType.Battleship).Should().HaveCount(battleshipsCount);
             gameBoard.Ships.Where(x => x.ShipType == ShipType.Destroyer).Should().HaveCount(destroyersCount);
 
-            // Check if all ships are set apart
-            gameBoard.Ships.All(s => !Enumerable.SequenceEqual(s.Fields, gameBoard.Ships.Except(new[] { s }).SelectMany(x => x.Fields)));
+            // Check if no ships are overlapping
+            gameBoard.Ships.Any(ship => ship.Fields
+                .Any(shipField => gameBoard.Ships.Except(new[] { ship })
+                    .SelectMany(x => x.Fields).Contains(shipField))).Should().BeFalse();
         }
     }
 }

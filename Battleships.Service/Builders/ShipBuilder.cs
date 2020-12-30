@@ -6,26 +6,20 @@ namespace Battleships.Service.Builders
 {
     public class ShipBuilder
     {
-        private OrientationType _orientation = OrientationType.Horizontal;
+        private readonly ShipType _shipType;
+        private OrientationType _orientation;
+        private GameField _startField;
 
-        private ShipType? _shipType;
-
-        private GameField _startField = new GameField(1, 1);
-
-        public ShipBuilder OfType(ShipType shipType)
+        public ShipBuilder(ShipType shipType)
         {
             _shipType = shipType;
-            return this;
+            _orientation = OrientationType.Horizontal;
+            _startField = new GameField(1, 1);
         }
 
         public Ship Build()
         {
-            if (!_shipType.HasValue)
-            {
-                throw new ArgumentException("Ship type must be specified");
-            }
-
-            switch (_shipType.Value)
+            switch (_shipType)
             {
                 case ShipType.Battleship:
                     return new Battleship(_orientation, _startField);
@@ -38,14 +32,16 @@ namespace Battleships.Service.Builders
             }
         }
 
-        public ShipBuilder OnPosition(int x, int y)
+        public ShipBuilder OnPosition(int x, int y) => OnPosition(new GameField(x, y));
+
+        public ShipBuilder OnPosition(GameField field)
         {
-            if (x < 0 || y < 0)
+            if (field.X < 0 || field.Y < 0)
             {
                 throw new ArgumentException("Invalid ship position");
             }
 
-            _startField = new GameField(x, y);
+            _startField = field;
             return this;
         }
 
@@ -54,7 +50,5 @@ namespace Battleships.Service.Builders
             _orientation = orientation;
             return this;
         }
-
-        internal ShipBuilder OnPosition((int x, int y) p) => OnPosition(p.x, p.y);
     }
 }

@@ -28,8 +28,7 @@ namespace Battleships.Test
             var expectedLastField = GetExpectedLastField(orientation, x, y, expectedShipSize);
 
             // Act
-            Ship ship = new ShipBuilder()
-                .OfType(shipType)
+            var ship = new ShipBuilder(shipType)
                 .OnPosition(x, y)
                 .WithOrientation(orientation)
                 .Build();
@@ -61,7 +60,7 @@ namespace Battleships.Test
             var expectedLastField = GetExpectedLastField(OrientationType.Horizontal, 1, 1, expectedShipSize);
 
             // Act
-            var ship = new ShipBuilder().OfType(shipType).Build();
+            var ship = new ShipBuilder(shipType).Build();
 
             // Assert
             ship.Should().NotBeNull();
@@ -78,19 +77,6 @@ namespace Battleships.Test
             ship.Fields.First().X.Should().Be(1);
             ship.Fields.First().Y.Should().Be(1);
             ship.Fields.Last().Should().Be(expectedLastField);
-        }
-
-        [Fact]
-        public void Should_ThrowException_WhenNoShipTypeIsProvided()
-        {
-            // Act
-            var exception = Assert.Throws<ArgumentException>(() => new ShipBuilder().Build());
-
-            // Assert
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().NotBeNullOrEmpty();
-            exception.Message.Should().Be("Ship type must be specified");
         }
 
         private GameField GetExpectedLastField(OrientationType orientation, int x, int y, int expectedShipSize)
