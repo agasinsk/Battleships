@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Battleships.Service.Helpers
 {
@@ -36,9 +37,9 @@ namespace Battleships.Service.Helpers
                 throw new ArgumentException("First character must be a letter");
             }
 
-            if (!char.IsDigit(input[1]))
+            if (input.Substring(1, input.Length - 1).Any(x => !char.IsDigit(x)))
             {
-                throw new ArgumentException("First character must be a letter");
+                throw new ArgumentException("Only the first character can be a letter");
             }
         }
     }

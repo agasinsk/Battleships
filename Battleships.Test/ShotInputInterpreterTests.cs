@@ -1,5 +1,6 @@
 ﻿using Battleships.Service.Helpers;
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace Battleships.Test
@@ -25,6 +26,28 @@ namespace Battleships.Test
             // Assert
             x.Should().Be(expectedX);
             y.Should().Be(expectedY);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("AAS")]
+        [InlineData("a")]
+        [InlineData("ab8")]
+        [InlineData("8ab1")]
+        [InlineData("8")]
+        [InlineData("89")]
+        [InlineData("8119")]
+        [InlineData("$8")]
+        public void Should_ThrowValidationException_WhenInputIsInvalid(string input)
+        {
+            // Act
+            var exception = Assert.Throws<ArgumentException>(() => ShotInputInterpreter.GetFieldCoordinates(input));
+
+            // Assert
+            exception.Should().NotBeNull();
+            exception.Should().BeOfType<ArgumentException>();
         }
     }
 }
