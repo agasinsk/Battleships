@@ -116,5 +116,79 @@ namespace Battleships.Test
             _gameBoard.UsedFields.First().Should().Be(new GameField(3, 4));
             _gameBoard.UsedFields.Last().Should().Be(new GameField(3, 7));
         }
+
+        [Fact]
+        public void Should_ReturnTrue_IfAllShipsWereSunken()
+        {
+            // Arrange
+            var battleshipShotResults = new[]
+            {
+                _gameBoard.ShootAt("B2"),
+                _gameBoard.ShootAt("C2"),
+                _gameBoard.ShootAt("D2"),
+                _gameBoard.ShootAt("E2"),
+                _gameBoard.ShootAt("F2"),
+            };
+
+            var destroyerShotResults = new[]
+            {
+                _gameBoard.ShootAt("C4"),
+                _gameBoard.ShootAt("C5"),
+                _gameBoard.ShootAt("C6"),
+                _gameBoard.ShootAt("C7"),
+            };
+
+            var horizontalDestroyerShotResults = new[]
+            {
+                _gameBoard.ShootAt("F6"),
+                _gameBoard.ShootAt("G6"),
+                _gameBoard.ShootAt("H6"),
+                _gameBoard.ShootAt("I6"),
+            };
+
+            // Act
+            var result = _gameBoard.AllShipsAreSunk();
+
+            // Assert
+            using var scope = new AssertionScope();
+            result.Should().BeTrue();
+
+            battleshipShotResults.All(x => x.ShipType == ShipType.Battleship).Should().BeTrue();
+            battleshipShotResults.Where(x => x.ShotResultType == ShotResultType.Hit).Should().HaveCount(4);
+            battleshipShotResults.Where(x => x.ShotResultType == ShotResultType.Sunk).Should().HaveCount(1);
+
+            destroyerShotResults.All(x => x.ShipType == ShipType.Destroyer).Should().BeTrue();
+            destroyerShotResults.Where(x => x.ShotResultType == ShotResultType.Hit).Should().HaveCount(3);
+            destroyerShotResults.Where(x => x.ShotResultType == ShotResultType.Sunk).Should().HaveCount(1);
+
+            horizontalDestroyerShotResults.All(x => x.ShipType == ShipType.Destroyer).Should().BeTrue();
+            horizontalDestroyerShotResults.Where(x => x.ShotResultType == ShotResultType.Hit).Should().HaveCount(3);
+            horizontalDestroyerShotResults.Where(x => x.ShotResultType == ShotResultType.Sunk).Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void Should_ReturnFalse_IfNotAllShipsWereSunken()
+        {
+            // Arrange
+            var battleshipShotResults = new[]
+            {
+                _gameBoard.ShootAt("B2"),
+                _gameBoard.ShootAt("C2"),
+                _gameBoard.ShootAt("D2"),
+                _gameBoard.ShootAt("E2"),
+                _gameBoard.ShootAt("F2"),
+            };
+
+            // Act
+            var result = _gameBoard.AllShipsAreSunk();
+
+            // Assert
+            using var scope = new AssertionScope();
+            result.Should().BeFalse();
+
+            battleshipShotResults.All(x => x.ShipType == ShipType.Battleship).Should().BeTrue();
+            battleshipShotResults.Where(x => x.ShotResultType == ShotResultType.Hit).Should().HaveCount(4);
+            battleshipShotResults.Where(x => x.ShotResultType == ShotResultType.Sunk).Should().HaveCount(1);
+        }
     }
 }

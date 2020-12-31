@@ -40,5 +40,7 @@ namespace Battleships.Service.Models
 
             return new ShotResult(ShotResultType.Miss);
         }
+
+        public bool AllShipsAreSunk() => Ships.All(s => s.IsSunk());
     }
 }
