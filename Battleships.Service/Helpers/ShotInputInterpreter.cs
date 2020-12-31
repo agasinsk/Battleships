@@ -1,18 +1,19 @@
-﻿using System;
+﻿using Battleships.Service.Models;
+using System;
 using System.Linq;
 
 namespace Battleships.Service.Helpers
 {
     public class ShotInputInterpreter
     {
-        public static (int x, int y) GetFieldCoordinates(string input)
+        public static GameField GetGameField(string input)
         {
             ValidateInputOrThrow(input);
 
             var x = ConvertAsciiLetterToInt32(input[0]);
             var y = int.Parse(input.Substring(1, input.Length - 1));
 
-            return (x, y);
+            return new GameField(x, y);
         }
 
         private static int ConvertAsciiLetterToInt32(char letter)
