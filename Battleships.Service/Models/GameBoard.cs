@@ -21,11 +21,9 @@ namespace Battleships.Service.Models
             UsedFields = new List<GameField>();
         }
 
-        public ShotResult this[string key] => GetShotResult(key);
-
-        private ShotResult GetShotResult(string key)
+        public ShotResult ShootAt(string shotKey)
         {
-            var gameField = ShotInputInterpreter.GetGameField(key);
+            var gameField = ShotKeyInterpreter.GetGameField(shotKey);
             UsedFields.Add(gameField);
 
             foreach (var ship in Ships)

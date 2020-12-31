@@ -2,6 +2,7 @@
 using Battleships.Service.Models;
 using Battleships.Service.Models.Enums;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Battleships.Test
 {
     public class GameBoardTests
     {
-        private GameBoard _gameBoard;
+        private readonly GameBoard _gameBoard;
 
         public GameBoardTests()
         {
@@ -41,10 +42,10 @@ namespace Battleships.Test
         public void Should_GetCorrectShotResult_WithSingleShot(string shotKey, ShotResultType shotResultType, ShipType? shipType = null)
         {
             // Arrange
-            var expectedGameField = ShotInputInterpreter.GetGameField(shotKey);
+            var expectedGameField = ShotKeyInterpreter.GetGameField(shotKey);
 
             // Act
-            var shotResult = _gameBoard[shotKey];
+            var shotResult = _gameBoard.ShootAt(shotKey);
 
             // Assert
             shotResult.Should().NotBeNull();
@@ -53,6 +54,67 @@ namespace Battleships.Test
 
             _gameBoard.UsedFields.Should().HaveCount(1);
             _gameBoard.UsedFields.Single().Should().Be(expectedGameField);
+        }
+
+        [Fact]
+        public void Should_GetSunkShotResult_WhenBattleshipWasSunk()
+        {
+            // Arrange
+            var previousShotResults = new[]
+            {
+                _gameBoard.ShootAt("B2"),
+                _gameBoard.ShootAt("C2"),
+                _gameBoard.ShootAt("D2"),
+                _gameBoard.ShootAt("E2"),
+            };
+
+            // Act
+            var shotResult = _gameBoard.ShootAt("F2");
+
+            // Assert
+            using var scope = new AssertionScope();
+
+            previousShotResults.Should().HaveCount(4);
+            previousShotResults.All(x => x.ShotResultType == ShotResultType.Hit).Should().BeTrue();
+            previousShotResults.All(x => x.ShipType == ShipType.Battleship).Should().BeTrue();
+
+            shotResult.Should().NotBeNull();
+            shotResult.ShotResultType.Should().Be(ShotResultType.Sunk);
+            shotResult.ShipType.Should().Be(ShipType.Battleship);
+
+            _gameBoard.UsedFields.Should().HaveCount(5);
+            _gameBoard.UsedFields.First().Should().Be(new GameField(2, 2));
+            _gameBoard.UsedFields.Last().Should().Be(new GameField(6, 2));
+        }
+
+        [Fact]
+        public void Should_GetSunkShotResult_WhenDestroyerWasSunk()
+        {
+            // Arrange
+            var previousShotResults = new[]
+            {
+                _gameBoard.ShootAt("C4"),
+                _gameBoard.ShootAt("C5"),
+                _gameBoard.ShootAt("C6"),
+            };
+
+            // Act
+            var shotResult = _gameBoard.ShootAt("C7");
+
+            // Assert
+            using var scope = new AssertionScope();
+
+            previousShotResults.Should().HaveCount(3);
+            previousShotResults.All(x => x.ShotResultType == ShotResultType.Hit).Should().BeTrue();
+            previousShotResults.All(x => x.ShipType == ShipType.Destroyer).Should().BeTrue();
+
+            shotResult.Should().NotBeNull();
+            shotResult.ShotResultType.Should().Be(ShotResultType.Sunk);
+            shotResult.ShipType.Should().Be(ShipType.Destroyer);
+
+            _gameBoard.UsedFields.Should().HaveCount(4);
+            _gameBoard.UsedFields.First().Should().Be(new GameField(3, 4));
+            _gameBoard.UsedFields.Last().Should().Be(new GameField(3, 7));
         }
     }
 }

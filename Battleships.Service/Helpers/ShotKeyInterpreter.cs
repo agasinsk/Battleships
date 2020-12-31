@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Battleships.Service.Helpers
 {
-    public class ShotInputInterpreter
+    public class ShotKeyInterpreter
     {
         public static GameField GetGameField(string input)
         {

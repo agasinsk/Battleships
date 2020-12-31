@@ -16,12 +16,15 @@ namespace Battleships.Service.Models
 
         public GameField StartField { get; set; }
 
-        public IEnumerable<GameField> Fields => StartField.Expand(Orientation, Size);
+        public IEnumerable<GameField> Fields { get; private set; }
 
         protected Ship(OrientationType orientation, GameField startField)
         {
             Orientation = orientation;
             StartField = startField ?? throw new ArgumentNullException(nameof(startField));
+            Fields = StartField.Expand(Orientation, Size);
         }
+
+        internal bool IsSunk() => Fields.All(f => f.WasHit);
     }
 }

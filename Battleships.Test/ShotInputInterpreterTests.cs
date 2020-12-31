@@ -21,7 +21,7 @@ namespace Battleships.Test
         public void Should_GetCorrectCoordinates_FromShotInput(string input, int expectedX, int expectedY)
         {
             // Act
-            var field = ShotInputInterpreter.GetGameField(input);
+            var field = ShotKeyInterpreter.GetGameField(input);
 
             // Assert
             field.Should().NotBeNull();
@@ -44,7 +44,7 @@ namespace Battleships.Test
         public void Should_ThrowValidationException_WhenInputIsInvalid(string input)
         {
             // Act
-            var exception = Assert.Throws<ArgumentException>(() => ShotInputInterpreter.GetGameField(input));
+            var exception = Assert.Throws<ArgumentException>(() => ShotKeyInterpreter.GetGameField(input));
 
             // Assert
             exception.Should().NotBeNull();

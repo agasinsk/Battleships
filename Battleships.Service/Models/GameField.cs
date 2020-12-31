@@ -1,12 +1,12 @@
-﻿using System;
-
-namespace Battleships.Service.Models
+﻿namespace Battleships.Service.Models
 {
     public class GameField
     {
         public int X { get; internal set; }
 
         public int Y { get; internal set; }
+
+        public bool WasHit { get; private set; }
 
         public GameField(int x, int y)
         {
@@ -31,6 +31,11 @@ namespace Battleships.Service.Models
         public override int GetHashCode()
         {
             return X.GetHashCode() - Y.GetHashCode();
+        }
+
+        internal void MarkAsHit()
+        {
+            WasHit = true;
         }
     }
 }
