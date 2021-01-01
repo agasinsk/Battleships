@@ -12,9 +12,9 @@ namespace Battleships.Service.Builders
         private readonly List<Ship> _ships;
         private readonly Random _random;
         private readonly int _gridSize;
+        private readonly List<GameField> _occupiedFields;
         private ShipBuilder _shipBuilder;
-        private List<GameField> _occupiedFields;
-        private int _maxRetriesCount => _gridSize * 10;
+        private int MaxRetriesCount => _gridSize * 10;
 
         public GameBoardBuilder(int gridSize = 10)
         {
@@ -31,7 +31,7 @@ namespace Battleships.Service.Builders
             var ships = Enumerable.Range(1, shipsCount)
                 .Select(x =>
                 {
-                    var orientation = GetRandomOrientation();
+                    var orientation = _random.GetRandomOrientation();
 
                     var ship = _shipBuilder
                         .WithOrientation(orientation)
@@ -63,7 +63,7 @@ namespace Battleships.Service.Builders
 
             do
             {
-                if (retriesCount >= _maxRetriesCount)
+                if (retriesCount >= MaxRetriesCount)
                 {
                     throw new ArgumentException($"Could not find free space for {shipType}");
                 }
@@ -82,22 +82,12 @@ namespace Battleships.Service.Builders
         {
             var shipFields = gameField.Expand(orientation, shipSize);
 
-            return shipFields.Any(field => IsFieldOccupied(field));
-        }
-
-        private bool IsFieldOccupied(GameField field)
-        {
-            return _occupiedFields.Any(f => f == field);
+            return _occupiedFields.Intersect(shipFields).Any();
         }
 
         private int GetShipSize(ShipType shipType)
         {
             return shipType == ShipType.Battleship ? Battleship.DefaultSize : Destroyer.DefaultSize;
-        }
-
-        private OrientationType GetRandomOrientation()
-        {
-            return _random.NextDouble() > 0.5 ? OrientationType.Vertical : OrientationType.Horizontal;
         }
     }
 }

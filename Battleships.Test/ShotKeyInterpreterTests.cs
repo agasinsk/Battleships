@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Battleships.Test
 {
-    public class ShotInputInterpreterTests
+    public class ShotKeyInterpreterTests
     {
         [Theory]
         [InlineData("A1", 1, 1)]
@@ -18,10 +18,10 @@ namespace Battleships.Test
         [InlineData("e10", 5, 10)]
         [InlineData("J22", 10, 22)]
         [InlineData("j22", 10, 22)]
-        public void Should_GetCorrectCoordinates_FromShotInput(string input, int expectedX, int expectedY)
+        public void Should_GetCorrectGameField_FromShotKey(string shotKey, int expectedX, int expectedY)
         {
             // Act
-            var field = ShotKeyInterpreter.GetGameField(input);
+            var field = ShotKeyInterpreter.GetGameField(shotKey);
 
             // Assert
             field.Should().NotBeNull();

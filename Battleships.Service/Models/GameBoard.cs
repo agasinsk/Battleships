@@ -24,6 +24,14 @@ namespace Battleships.Service.Models
         public ShotResult ShootAt(string shotKey)
         {
             var gameField = ShotKeyInterpreter.GetGameField(shotKey);
+
+            return ShootAt(gameField);
+        }
+
+        public bool AllShipsAreSunk() => Ships.All(s => s.IsSunk());
+
+        internal ShotResult ShootAt(GameField gameField)
+        {
             UsedFields.Add(gameField);
 
             foreach (var ship in Ships)
@@ -34,13 +42,11 @@ namespace Battleships.Service.Models
                 {
                     shipField.MarkAsHit();
 
-                    return new ShotResult(ship.IsSunk() ? ShotResultType.Sunk : ShotResultType.Hit, ship.ShipType);
+                    return new ShotResult(gameField, ship.IsSunk() ? ShotResultType.Sunk : ShotResultType.Hit, ship.ShipType);
                 }
             }
 
-            return new ShotResult(ShotResultType.Miss);
+            return new ShotResult(gameField, ShotResultType.Miss);
         }
-
-        public bool AllShipsAreSunk() => Ships.All(s => s.IsSunk());
     }
 }
