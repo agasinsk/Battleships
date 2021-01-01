@@ -25,6 +25,13 @@ namespace Battleships.Service
             _aiPlayer = new AIPlayer(gridSize);
         }
 
+        public bool GameIsOn() => !AIBoard.AllShipsAreSunk() && !PlayerBoard.AllShipsAreSunk();
+
+        public string GetWinner()
+        {
+            return AIBoard.AllShipsAreSunk() ? "Computer" : "Player";
+        }
+
         public ShotResult PlayPlayerMove(string userShotKey)
         {
             var shotResult = AIBoard.ShootAt(userShotKey);

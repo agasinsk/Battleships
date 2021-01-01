@@ -9,49 +9,66 @@ namespace Battleships.Service.Builders
 {
     public class GameBoardBuilder
     {
-        private readonly List<Ship> _ships;
         private readonly Random _random;
         private readonly int _gridSize;
         private readonly List<GameField> _occupiedFields;
-        private ShipBuilder _shipBuilder;
+        private readonly Dictionary<ShipType, int> _shipsConfiguration;
+
         private int MaxRetriesCount => _gridSize * 10;
 
         public GameBoardBuilder(int gridSize = 10)
         {
             _gridSize = gridSize;
             _random = new Random();
-            _ships = new List<Ship>();
             _occupiedFields = new List<GameField>();
+            _shipsConfiguration = new Dictionary<ShipType, int>();
         }
 
         public GameBoardBuilder WithShips(int shipsCount, ShipType shipType)
         {
-            _shipBuilder = new ShipBuilder(shipType);
-
-            var ships = Enumerable.Range(1, shipsCount)
-                .Select(x =>
-                {
-                    var orientation = _random.GetRandomOrientation();
-
-                    var ship = _shipBuilder
-                        .WithOrientation(orientation)
-                        .OnPosition(GetRandomFreePosition(shipType, orientation))
-                        .Build();
-                    _occupiedFields.AddRange(ship.Fields);
-
-                    return ship;
-                });
-
-            _ships.AddRange(ships);
-
+            _shipsConfiguration[shipType] = shipsCount;
             return this;
         }
 
         public GameBoard Build()
         {
-            var gameBoard = new GameBoard(_gridSize, _ships);
+            var ships = BuildShips();
+            var gameBoard = new GameBoard(_gridSize, ships);
 
             return gameBoard;
+        }
+
+        private IEnumerable<Ship> BuildShips()
+        {
+            var ships = new List<Ship>();
+
+            foreach (var (shipType, shipsCount) in _shipsConfiguration)
+            {
+                var shipBuilder = new ShipBuilder(shipType);
+
+                var builtShips = Enumerable.Range(1, shipsCount)
+                    .Select(x => BuildShip(shipBuilder, shipType));
+
+                ships.AddRange(builtShips);
+            }
+
+            _occupiedFields.Clear();
+
+            return ships;
+        }
+
+        private Ship BuildShip(ShipBuilder shipBuilder, ShipType shipType)
+        {
+            var orientation = _random.GetRandomOrientation();
+
+            var ship = shipBuilder
+                .WithOrientation(orientation)
+                .OnPosition(GetRandomFreePosition(shipType, orientation))
+                .Build();
+
+            _occupiedFields.AddRange(ship.Fields);
+
+            return ship;
         }
 
         private GameField GetRandomFreePosition(ShipType shipType, OrientationType orientation)

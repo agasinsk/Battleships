@@ -51,6 +51,7 @@ namespace Battleships.Test
             shotResult.Should().NotBeNull();
             shotResult.ShotResultType.Should().Be(shotResultType);
             shotResult.ShipType.Should().Be(shipType);
+            shotResult.GameField.Should().Be(expectedGameField);
         }
 
         [Fact]
