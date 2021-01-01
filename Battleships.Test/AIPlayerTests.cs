@@ -1,5 +1,6 @@
 ﻿using Battleships.Service;
 using Battleships.Service.Models;
+using Battleships.Service.Models.Enums;
 using FluentAssertions;
 using System.Linq;
 using Xunit;
@@ -14,10 +15,10 @@ namespace Battleships.Test
             // Arrange
             const int gridSize = 10;
             var aiPlayer = new AIPlayer(gridSize);
-            var usedFields = Enumerable.Empty<GameField>();
+            var previousShotResults = Enumerable.Empty<ShotResult>();
 
             // Act
-            var gameField = aiPlayer.GetGameFieldToShoot(usedFields);
+            var gameField = aiPlayer.GetGameFieldToShoot(previousShotResults);
 
             // Assert
             gameField.Should().NotBeNull();
@@ -25,7 +26,7 @@ namespace Battleships.Test
             gameField.X.Should().BePositive();
             gameField.Y.Should().BePositive();
             gameField.Y.Should().BeLessOrEqualTo(gridSize);
-            usedFields.Should().NotContain(gameField);
+            previousShotResults.Any(x => x.GameField == gameField).Should().BeFalse();
         }
 
         [Fact]
@@ -34,19 +35,20 @@ namespace Battleships.Test
             // Arrange
             const int gridSize = 2;
             var aiPlayer = new AIPlayer(gridSize);
-            var usedFields = Enumerable.Range(1, gridSize)
-                .SelectMany(x => Enumerable.Range(1, gridSize).Select(y => new GameField(x, y)))
+            var previousShotResults = Enumerable.Range(1, gridSize)
+                .SelectMany(x => Enumerable.Range(1, gridSize)
+                    .Select(y => new ShotResult(new GameField(x, y), ShotResultType.Miss)))
                 .ToList();
-            var expectedGameField = usedFields.Last();
-            usedFields.Remove(expectedGameField);
+            var lastShotResult = previousShotResults.Last();
+            previousShotResults.Remove(lastShotResult);
 
             // Act
-            var gameField = aiPlayer.GetGameFieldToShoot(usedFields);
+            var gameField = aiPlayer.GetGameFieldToShoot(previousShotResults);
 
             // Assert
             gameField.Should().NotBeNull();
-            gameField.Should().Be(expectedGameField);
-            usedFields.Should().NotContain(gameField);
+            gameField.Should().Be(lastShotResult.GameField);
+            previousShotResults.Any(x => x.GameField == gameField).Should().BeFalse();
         }
     }
 }

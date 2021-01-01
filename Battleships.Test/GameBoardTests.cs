@@ -51,9 +51,6 @@ namespace Battleships.Test
             shotResult.Should().NotBeNull();
             shotResult.ShotResultType.Should().Be(shotResultType);
             shotResult.ShipType.Should().Be(shipType);
-
-            _gameBoard.UsedFields.Should().HaveCount(1);
-            _gameBoard.UsedFields.Single().Should().Be(expectedGameField);
         }
 
         [Fact]
@@ -81,10 +78,6 @@ namespace Battleships.Test
             shotResult.Should().NotBeNull();
             shotResult.ShotResultType.Should().Be(ShotResultType.Sunk);
             shotResult.ShipType.Should().Be(ShipType.Battleship);
-
-            _gameBoard.UsedFields.Should().HaveCount(5);
-            _gameBoard.UsedFields.First().Should().Be(new GameField(2, 2));
-            _gameBoard.UsedFields.Last().Should().Be(new GameField(6, 2));
         }
 
         [Fact]
@@ -111,10 +104,6 @@ namespace Battleships.Test
             shotResult.Should().NotBeNull();
             shotResult.ShotResultType.Should().Be(ShotResultType.Sunk);
             shotResult.ShipType.Should().Be(ShipType.Destroyer);
-
-            _gameBoard.UsedFields.Should().HaveCount(4);
-            _gameBoard.UsedFields.First().Should().Be(new GameField(3, 4));
-            _gameBoard.UsedFields.Last().Should().Be(new GameField(3, 7));
         }
 
         [Fact]

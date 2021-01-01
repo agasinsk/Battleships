@@ -12,13 +12,13 @@ namespace Battleships.Service.Models
 
         public IEnumerable<Ship> Ships { get; private set; }
 
-        public IList<GameField> UsedFields { get; private set; }
+        public IList<ShotResult> ShotResults { get; private set; }
 
         public GameBoard(int gridSize, IEnumerable<Ship> ships)
         {
             GridSize = gridSize;
             Ships = ships ?? throw new ArgumentNullException(nameof(ships));
-            UsedFields = new List<GameField>();
+            ShotResults = new List<ShotResult>();
         }
 
         public ShotResult ShootAt(string shotKey)
@@ -32,8 +32,6 @@ namespace Battleships.Service.Models
 
         internal ShotResult ShootAt(GameField gameField)
         {
-            UsedFields.Add(gameField);
-
             foreach (var ship in Ships)
             {
                 var shipField = ship.Fields.FirstOrDefault(f => f == gameField);

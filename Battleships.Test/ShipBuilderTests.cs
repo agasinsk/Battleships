@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Battleships.Test
 {
-    public class ShipBuilderTest
+    public class ShipBuilderTests
     {
         [Theory]
         [InlineData(ShipType.Battleship, OrientationType.Horizontal, 1, 1)]

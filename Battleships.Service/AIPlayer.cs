@@ -20,36 +20,37 @@ namespace Battleships.Service
             _random = new Random();
         }
 
-        public GameField GetGameFieldToShoot(IEnumerable<GameField> usedFields, ShotResult lastShotResult = null)
+        public GameField GetGameFieldToShoot(IEnumerable<ShotResult> shotResults)
         {
-            if (lastShotResult is null)
+            if (!shotResults.Any())
             {
-                return GetRandomUnusedGameField(usedFields);
+                return GetRandomUnusedGameField(shotResults);
             }
 
-            switch (lastShotResult.ShotResultType)
+            switch (shotResults.Last().ShotResultType)
             {
                 case ShotResultType.Hit:
-                    return GetMostProbableGameField(usedFields, lastShotResult);
+                    return GetMostProbableGameField(shotResults);
 
                 case ShotResultType.Sunk:
                 case ShotResultType.Miss:
                 default:
-                    return GetRandomUnusedGameField(usedFields);
+                    return GetRandomUnusedGameField(shotResults);
             }
         }
 
-        private GameField GetMostProbableGameField(IEnumerable<GameField> usedFields, ShotResult lastShotResult)
+        private GameField GetMostProbableGameField(IEnumerable<ShotResult> shotResults)
         {
             // TODO: implement more sophisticated logic maybe?
             var orientation = _random.GetRandomOrientation();
+            var lastShotResult = shotResults.Last();
 
             return new GameField(
                 lastShotResult.GameField.X + (orientation == OrientationType.Horizontal ? 1 : 0),
                 lastShotResult.GameField.Y + (orientation == OrientationType.Vertical ? 1 : 0));
         }
 
-        private GameField GetRandomUnusedGameField(IEnumerable<GameField> usedFields)
+        private GameField GetRandomUnusedGameField(IEnumerable<ShotResult> shotResults)
         {
             var gameField = new GameField(1, 1);
             var retriesCount = 0;
@@ -66,7 +67,7 @@ namespace Battleships.Service
 
                 retriesCount++;
             }
-            while (usedFields.Contains(gameField));
+            while (shotResults.Select(x => x.GameField).Contains(gameField));
 
             return gameField;
         }
