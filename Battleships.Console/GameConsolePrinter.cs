@@ -10,10 +10,22 @@ namespace Battleships.ConsoleUI
     internal class GameConsolePrinter
     {
         private readonly PrintableGameBoardConverter _gameBoardConverter;
+        private readonly int _gridSize;
 
-        public GameConsolePrinter()
+        private int DefaultAIPlayerTurnPosition => _gridSize * 2 + 8;
+
+        private int DefaultPlayerTurnPosition => _gridSize * 2 + 3;
+
+        private int DefaultPlayerTargetingBoardPosition => 0;
+
+        private int DefaultErrorMessagePosition => DefaultPlayerTurnPosition + 2;
+
+        private int DefaultPlayerShipBoardPosition => _gridSize + 2;
+
+        public GameConsolePrinter(int gridSize)
         {
             _gameBoardConverter = new PrintableGameBoardConverter();
+            _gridSize = gridSize;
         }
 
         internal void PrintGameBoard(GameBoard gameBoard)
@@ -29,8 +41,10 @@ namespace Battleships.ConsoleUI
             Console.WriteLine($"And the winner is {winner}");
         }
 
-        internal void PrintComputerTurn()
+        internal void PrintAIPlayerTurn()
         {
+            Console.SetCursorPosition(0, DefaultAIPlayerTurnPosition);
+
             PrintLineDivider();
             Console.Write("Computers turn: ");
         }
@@ -52,35 +66,41 @@ namespace Battleships.ConsoleUI
 
         internal void PrintPlayerTurn()
         {
+            Console.SetCursorPosition(0, DefaultPlayerTurnPosition);
             PrintLineDivider();
-            Console.Write("Shoot at: ");
+            Console.Write("\rShoot at: ");
         }
 
-        internal void PrintGameField(GameField gameField)
+        internal void PrintGameField(GameField gameField) => Console.WriteLine($"{gameField.GetShotKey()}");
+
+        internal void PrintError(string text)
         {
-            Console.WriteLine($"{gameField.GetShotKey()}");
+            Console.SetCursorPosition(0, DefaultErrorMessagePosition);
+            WriteLineInColor(text, ConsoleColor.Red);
         }
 
-        private static void PrintLineDivider()
+        private void PrintLineDivider()
         {
-            Console.WriteLine("———————————");
+            Console.WriteLine("——————————————————————");
         }
 
         private void PrintTargetingBoard(GameBoard gameBoard)
         {
-            Console.SetCursorPosition(0, 0);
+            Console.SetCursorPosition(0, DefaultPlayerTargetingBoardPosition);
+
             var targetingBoard = _gameBoardConverter.GetPrintableTargetingBoard(gameBoard);
-            PrintBoard(targetingBoard);
+            PrintBoardElements(targetingBoard);
         }
 
         private void PrintShipBoard(GameBoard gameBoard)
         {
-            Console.SetCursorPosition(0, gameBoard.GridSize + 2);
+            Console.SetCursorPosition(0, DefaultPlayerShipBoardPosition);
+
             var shipBoard = _gameBoardConverter.GetPrintableShipBoard(gameBoard);
-            PrintBoard(shipBoard);
+            PrintBoardElements(shipBoard);
         }
 
-        private void PrintBoard(PrintableBoardElement[][] board)
+        private void PrintBoardElements(PrintableBoardElement[][] board)
         {
             for (int column = 0; column < board.First().Length; column++)
             {

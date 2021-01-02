@@ -6,22 +6,17 @@ namespace Battleships.Service.Helpers
 {
     public class ShotKeyInterpreter
     {
-        public static GameField GetGameField(string input)
+        public static GameField GetGameField(string input, int gridSize)
         {
-            ValidateInputOrThrow(input);
+            ValidateInputOrThrow(input, gridSize);
 
             var x = ConvertAsciiLetterToInt32(input[0]);
-            var y = int.Parse(input.Substring(1, input.Length - 1));
+            var y = int.Parse(input[1..]);
 
             return new GameField(x, y);
         }
 
-        private static int ConvertAsciiLetterToInt32(char letter)
-        {
-            return Convert.ToInt32(letter) - (char.IsUpper(letter) ? 65 : 97) + 1;
-        }
-
-        private static void ValidateInputOrThrow(string input)
+        private static void ValidateInputOrThrow(string input, int gridSize)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
@@ -37,11 +32,23 @@ namespace Battleships.Service.Helpers
             {
                 throw new ArgumentException("First character must be a letter");
             }
+            else
+            {
+                if (ConvertAsciiLetterToInt32(input[0]) > gridSize)
+                {
+                    throw new ArgumentException("Invalid letter provided");
+                }
+            }
 
-            if (input.Substring(1, input.Length - 1).Any(x => !char.IsDigit(x)))
+            if (input[1..].Any(x => !char.IsDigit(x)))
             {
                 throw new ArgumentException("Only the first character can be a letter");
             }
+        }
+
+        private static int ConvertAsciiLetterToInt32(char letter)
+        {
+            return Convert.ToInt32(letter) - (char.IsUpper(letter) ? 65 : 97) + 1;
         }
     }
 }

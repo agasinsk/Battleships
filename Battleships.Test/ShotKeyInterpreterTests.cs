@@ -21,7 +21,7 @@ namespace Battleships.Test
         public void Should_GetCorrectGameField_FromShotKey(string shotKey, int expectedX, int expectedY)
         {
             // Act
-            var field = ShotKeyInterpreter.GetGameField(shotKey);
+            var field = ShotKeyInterpreter.GetGameField(shotKey, gridSize: 10);
 
             // Assert
             field.Should().NotBeNull();
@@ -41,10 +41,12 @@ namespace Battleships.Test
         [InlineData("89")]
         [InlineData("8119")]
         [InlineData("$8")]
+        [InlineData("S4")]
+        [InlineData("K1")]
         public void Should_ThrowValidationException_WhenInputIsInvalid(string input)
         {
             // Act
-            var exception = Assert.Throws<ArgumentException>(() => ShotKeyInterpreter.GetGameField(input));
+            var exception = Assert.Throws<ArgumentException>(() => ShotKeyInterpreter.GetGameField(input, gridSize: 10));
 
             // Assert
             exception.Should().NotBeNull();

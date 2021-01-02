@@ -42,7 +42,7 @@ namespace Battleships.Test
         public void Should_GetCorrectShotResult_WithSingleShot(string shotKey, ShotResultType shotResultType, ShipType? shipType = null)
         {
             // Arrange
-            var expectedGameField = ShotKeyInterpreter.GetGameField(shotKey);
+            var expectedGameField = ShotKeyInterpreter.GetGameField(shotKey, _gameBoard.GridSize);
 
             // Act
             var shotResult = _gameBoard.ShootAt(shotKey);

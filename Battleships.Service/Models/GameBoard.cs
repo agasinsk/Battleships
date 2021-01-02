@@ -23,7 +23,7 @@ namespace Battleships.Service.Models
 
         public ShotResult ShootAt(string shotKey)
         {
-            var gameField = ShotKeyInterpreter.GetGameField(shotKey);
+            var gameField = ShotKeyInterpreter.GetGameField(shotKey, GridSize);
 
             return ShootAt(gameField);
         }

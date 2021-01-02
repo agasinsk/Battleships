@@ -11,7 +11,7 @@ namespace Battleships.ConsoleUI
         public GameRunner()
         {
             _gameManager = new GameManager();
-            _gamePrinter = new GameConsolePrinter();
+            _gamePrinter = new GameConsolePrinter(_gameManager.GridSize);
         }
 
         public void Run()
@@ -32,7 +32,7 @@ namespace Battleships.ConsoleUI
 
         private void PlayAIMove()
         {
-            _gamePrinter.PrintComputerTurn();
+            _gamePrinter.PrintAIPlayerTurn();
             var aiShotResult = _gameManager.PlayAIMove();
             _gamePrinter.PrintGameField(aiShotResult.GameField);
             _gamePrinter.PrintShotResult(aiShotResult);
@@ -41,14 +41,24 @@ namespace Battleships.ConsoleUI
         private void PlayPlayerMove()
         {
             _gamePrinter.PrintPlayerTurn();
-            var shotKey = GetPlayerShotKey();
-            var playerShotResult = _gameManager.PlayPlayerMove(shotKey);
-            _gamePrinter.PrintShotResult(playerShotResult);
-        }
 
-        private string GetPlayerShotKey()
-        {
-            return Console.ReadLine();
+            var validPlayerTurn = false;
+
+            while (!validPlayerTurn)
+            {
+                try
+                {
+                    var shotKey = Console.ReadLine();
+                    var playerShotResult = _gameManager.PlayPlayerMove(shotKey);
+                    _gamePrinter.PrintShotResult(playerShotResult);
+                    validPlayerTurn = true;
+                }
+                catch (ArgumentException exception)
+                {
+                    _gamePrinter.PrintError(exception.Message);
+                    _gamePrinter.PrintPlayerTurn();
+                }
+            }
         }
     }
 }
