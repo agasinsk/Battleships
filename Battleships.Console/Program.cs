@@ -1,10 +1,11 @@
-﻿namespace Battleships.Console
+﻿namespace Battleships.ConsoleUI
 {
     internal class Program
     {
         private static void Main(string[] args)
         {
-            System.Console.WriteLine("Hello World!");
+            var battleshipsGame = new GameRunner();
+            battleshipsGame.Run();
         }
     }
 }
