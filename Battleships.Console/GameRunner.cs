@@ -1,17 +1,21 @@
-﻿using Battleships.Service;
+﻿using Battleships.ConsoleUI.Interfaces;
+using Battleships.Service.Interfaces;
+using Battleships.Service.Models.Enums;
 using System;
 
 namespace Battleships.ConsoleUI
 {
-    internal class GameRunner
+    public class GameRunner
     {
-        private readonly GameConsolePrinter _gamePrinter;
-        private readonly GameManager _gameManager;
+        private readonly IGamePrinter _gamePrinter;
+        private readonly IGameManager _gameManager;
+        private readonly IUserInputProvider _userInputProvider;
 
-        public GameRunner()
+        public GameRunner(IGameManager gameManager, IGamePrinter gamePrinter, IUserInputProvider userInputProvider)
         {
-            _gameManager = new GameManager();
-            _gamePrinter = new GameConsolePrinter(_gameManager.GridSize);
+            _gameManager = gameManager ?? throw new ArgumentNullException(nameof(gameManager));
+            _gamePrinter = gamePrinter ?? throw new ArgumentNullException(nameof(gamePrinter));
+            _userInputProvider = userInputProvider ?? throw new ArgumentNullException(nameof(userInputProvider));
         }
 
         public void Run()
@@ -19,15 +23,18 @@ namespace Battleships.ConsoleUI
             _gameManager.SetupGame();
             _gamePrinter.PrintGameBoard(_gameManager.PlayerBoard);
 
-            while (_gameManager.GameIsOn())
+            var winner = WinnerType.None;
+
+            while (winner == WinnerType.None)
             {
                 PlayPlayerMove();
                 PlayAIMove();
 
                 _gamePrinter.PrintGameBoard(_gameManager.PlayerBoard);
+                winner = _gameManager.GetWinner();
             }
 
-            _gamePrinter.PrintWinner(_gameManager.GetWinner());
+            _gamePrinter.PrintWinner(winner);
         }
 
         private void PlayAIMove()
@@ -48,14 +55,14 @@ namespace Battleships.ConsoleUI
             {
                 try
                 {
-                    var shotKey = Console.ReadLine();
+                    var shotKey = _userInputProvider.GetUserInput();
                     var playerShotResult = _gameManager.PlayPlayerMove(shotKey);
                     _gamePrinter.PrintShotResult(playerShotResult);
                     validPlayerTurn = true;
                 }
                 catch (ArgumentException exception)
                 {
-                    _gamePrinter.PrintError(exception.Message);
+                    _gamePrinter.PrintErrorMessage(exception.Message);
                     _gamePrinter.PrintPlayerTurn();
                 }
             }

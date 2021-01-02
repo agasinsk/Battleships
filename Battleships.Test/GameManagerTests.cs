@@ -74,36 +74,16 @@ namespace Battleships.Test
         }
 
         [Fact]
-        public void Should_ReturnTrue_WhenShipsWereNotSunk()
+        public void Should_ReturnNone_WhenShipsWereNotSunk()
         {
             // Arrange
             _gameManager.SetupGame();
 
             // Act
-            var result = _gameManager.GameIsOn();
+            var result = _gameManager.GetWinner();
 
             // Assert
-            result.Should().BeTrue();
-        }
-
-        [Fact]
-        public void Should_ReturnFalse_WhenShipsWereSunk()
-        {
-            // Arrange
-            _gameManager.SetupGame();
-
-            var fields = _gameManager.AIBoard.Ships.SelectMany(s => s.Fields);
-
-            foreach (var field in fields)
-            {
-                _gameManager.PlayPlayerMove(field.GetShotKey());
-            }
-
-            // Act
-            var result = _gameManager.GameIsOn();
-
-            // Assert
-            result.Should().BeFalse();
+            result.Should().Be(WinnerType.None);
         }
 
         [Fact]

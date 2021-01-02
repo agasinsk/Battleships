@@ -7,41 +7,42 @@ using System.Linq;
 
 namespace Battleships.ConsoleUI
 {
-    internal class GameConsolePrinter
+    public class ConsoleGamePrinter : IGamePrinter
     {
         private readonly PrintableGameBoardConverter _gameBoardConverter;
-        private readonly int _gridSize;
+
+        private int GridSize { get; set; } = 10;
 
         private int DefaultAIPlayerTurnPosition => DefaultPlayerTurnPosition + 3;
 
-        private int DefaultPlayerTurnPosition => _gridSize * 2 + 3;
+        private int DefaultPlayerTurnPosition => GridSize * 2 + 3;
 
         private int DefaultPlayerTargetingBoardPosition => 0;
 
         private int DefaultErrorMessagePosition => DefaultPlayerTurnPosition + 2;
 
-        private int DefaultPlayerShipBoardPosition => _gridSize + 2;
+        private int DefaultPlayerShipBoardPosition => GridSize + 2;
 
         private int DefaultWinnerAnnoucementPosition => DefaultAIPlayerTurnPosition + 2;
 
-        public GameConsolePrinter(int gridSize)
+        public ConsoleGamePrinter()
         {
             _gameBoardConverter = new PrintableGameBoardConverter();
-            _gridSize = gridSize;
         }
 
-        internal void PrintGameBoard(GameBoard gameBoard)
+        public void PrintGameBoard(GameBoard gameBoard)
         {
+            GridSize = gameBoard.GridSize;
             PrintTargetingBoard(gameBoard);
             PrintLineDivider();
             PrintShipBoard(gameBoard);
         }
 
-        internal void PrintWinner(WinnerType winner)
+        public void PrintWinner(WinnerType winner)
         {
             Console.SetCursorPosition(0, DefaultWinnerAnnoucementPosition);
             PrintLineDivider();
-           
+
             WriteLineInColor(winner == WinnerType.Player ? "You won!" : "Unfortunately you lost...",
                 winner == WinnerType.Player ? ConsoleColor.Cyan : ConsoleColor.DarkRed);
 
@@ -49,14 +50,14 @@ namespace Battleships.ConsoleUI
             Console.ReadLine();
         }
 
-        internal void PrintAIPlayerTurn()
+        public void PrintAIPlayerTurn()
         {
             Console.SetCursorPosition(0, DefaultAIPlayerTurnPosition);
             PrintLineDivider();
             Console.Write("Computers turn: ");
         }
 
-        internal void PrintShotResult(ShotResult shotResult)
+        public void PrintShotResult(ShotResult shotResult)
         {
             switch (shotResult.ShotResultType)
             {
@@ -73,7 +74,7 @@ namespace Battleships.ConsoleUI
             ClearToEndOfCurrentLine();
         }
 
-        internal void PrintPlayerTurn()
+        public void PrintPlayerTurn()
         {
             Console.SetCursorPosition(0, DefaultPlayerTurnPosition);
             PrintLineDivider();
@@ -81,14 +82,14 @@ namespace Battleships.ConsoleUI
             ClearToEndOfCurrentLine();
         }
 
-        internal void PrintGameField(GameField gameField)
+        public void PrintGameField(GameField gameField)
         {
             Console.Write($"{gameField.GetShotKey()}");
             ClearToEndOfCurrentLine();
             Console.WriteLine();
         }
 
-        internal void PrintError(string text)
+        public void PrintErrorMessage(string text)
         {
             Console.SetCursorPosition(0, DefaultErrorMessagePosition);
             WriteInColor(text, ConsoleColor.Red);
@@ -96,7 +97,7 @@ namespace Battleships.ConsoleUI
             Console.WriteLine();
         }
 
-        private static void ClearToEndOfCurrentLine()
+        private void ClearToEndOfCurrentLine()
         {
             int currentLeft = Console.CursorLeft;
             int currentTop = Console.CursorTop;
