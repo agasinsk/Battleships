@@ -44,5 +44,26 @@ namespace Battleships.Test
                 result.All(f => f.X == startField.X).Should().BeTrue();
             }
         }
+
+        [Theory]
+        [InlineData(2, 1, "B1")]
+        [InlineData(1, 1, "A1")]
+        [InlineData(26, 1, "Z1")]
+        [InlineData(1, 10, "A10")]
+        [InlineData(2, 111, "B111")]
+        [InlineData(26, 111, "Z111")]
+        [InlineData(1, 111, "A111")]
+        public void Should_GetCorrectShotKey(int x, int y, string expectedKey)
+        {
+            // Arrange
+            var gameField = new GameField(x, y);
+
+            // Act
+            var result = gameField.GetShotKey();
+
+            // Assert
+            result.Should().NotBeNullOrWhiteSpace();
+            result.Should().Be(expectedKey);
+        }
     }
 }

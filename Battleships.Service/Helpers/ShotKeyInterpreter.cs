@@ -44,6 +44,11 @@ namespace Battleships.Service.Helpers
             {
                 throw new ArgumentException("Only the first character can be a letter");
             }
+
+            if (int.Parse(input[1..]) > gridSize)
+            {
+                throw new ArgumentException($"Input must be less than or equal to {gridSize}");
+            }
         }
 
         private static int ConvertAsciiLetterToInt32(char letter)

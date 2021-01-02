@@ -20,7 +20,7 @@ namespace Battleships.Service.Extensions
 
         public static string GetShotKey(this GameField field)
         {
-            return $"{field.X.ToLetter()}{field.Y}";
+            return $"{(field.X - 1).ToLetter()}{field.Y}";
         }
     }
 }

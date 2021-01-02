@@ -8,17 +8,19 @@ namespace Battleships.Service.Models
 {
     public class GameBoard
     {
+        private IList<ShotResult> _shotResults;
+
         public int GridSize { get; private set; }
 
         public IEnumerable<Ship> Ships { get; private set; }
 
-        public IList<ShotResult> ShotResults { get; private set; }
+        public IEnumerable<ShotResult> ShotResults => _shotResults.AsEnumerable();
 
         public GameBoard(int gridSize, IEnumerable<Ship> ships)
         {
             GridSize = gridSize;
             Ships = ships ?? throw new ArgumentNullException(nameof(ships));
-            ShotResults = new List<ShotResult>();
+            _shotResults = new List<ShotResult>();
         }
 
         public ShotResult ShootAt(string shotKey)
@@ -29,6 +31,8 @@ namespace Battleships.Service.Models
         }
 
         public bool AllShipsAreSunk() => Ships.All(s => s.IsSunk());
+
+        public void AddShotResult(ShotResult shotResult) => _shotResults.Add(shotResult);
 
         internal ShotResult ShootAt(GameField gameField)
         {

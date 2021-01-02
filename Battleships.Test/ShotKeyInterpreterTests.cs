@@ -16,8 +16,8 @@ namespace Battleships.Test
         [InlineData("b6", 2, 6)]
         [InlineData("E10", 5, 10)]
         [InlineData("e10", 5, 10)]
-        [InlineData("J22", 10, 22)]
-        [InlineData("j22", 10, 22)]
+        [InlineData("J8", 10, 8)]
+        [InlineData("j9", 10, 9)]
         public void Should_GetCorrectGameField_FromShotKey(string shotKey, int expectedX, int expectedY)
         {
             // Act
@@ -43,6 +43,7 @@ namespace Battleships.Test
         [InlineData("$8")]
         [InlineData("S4")]
         [InlineData("K1")]
+        [InlineData("K11")]
         public void Should_ThrowValidationException_WhenInputIsInvalid(string input)
         {
             // Act
