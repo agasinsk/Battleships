@@ -1,10 +1,11 @@
 ﻿using Battleships.Service.Builders;
+using Battleships.Service.Interfaces;
 using Battleships.Service.Models;
 using Battleships.Service.Models.Enums;
 
 namespace Battleships.Service
 {
-    public class GameManager
+    public class GameManager : IGameManager
     {
         private AIPlayer _aiPlayer;
 
@@ -31,11 +32,19 @@ namespace Battleships.Service
             _aiPlayer = new AIPlayer(GridSize);
         }
 
-        public bool GameIsOn() => !AIBoard.AllShipsAreSunk() && !PlayerBoard.AllShipsAreSunk();
-
         public WinnerType GetWinner()
         {
-            return AIBoard.AllShipsAreSunk() ? WinnerType.Player : WinnerType.Computer;
+            if (AIBoard.AllShipsAreSunk())
+            {
+                return WinnerType.Player;
+            }
+
+            if (PlayerBoard.AllShipsAreSunk())
+            {
+                return WinnerType.Computer;
+            }
+
+            return WinnerType.None;
         }
 
         public ShotResult PlayPlayerMove(string userShotKey)
