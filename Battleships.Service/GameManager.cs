@@ -1,7 +1,6 @@
 ﻿using Battleships.Service.Builders;
 using Battleships.Service.Models;
 using Battleships.Service.Models.Enums;
-using System;
 
 namespace Battleships.Service
 {
@@ -13,38 +12,46 @@ namespace Battleships.Service
 
         public GameBoard AIBoard { get; set; }
 
-        public void SetupGame(int gridSize = 10)
+        public int GridSize { get; private set; }
+
+        public GameManager(int gridSize = 10)
         {
-            var gameBoardBuilder = new GameBoardBuilder(gridSize)
+            GridSize = gridSize;
+        }
+
+        public void SetupGame()
+        {
+            var gameBoardBuilder = new GameBoardBuilder(GridSize)
                 .WithShips(1, ShipType.Battleship)
                 .WithShips(2, ShipType.Destroyer);
 
             PlayerBoard = gameBoardBuilder.Build();
             AIBoard = gameBoardBuilder.Build();
 
-            _aiPlayer = new AIPlayer(gridSize);
+            _aiPlayer = new AIPlayer(GridSize);
         }
 
         public bool GameIsOn() => !AIBoard.AllShipsAreSunk() && !PlayerBoard.AllShipsAreSunk();
 
-        public string GetWinner()
+        public WinnerType GetWinner()
         {
-            return AIBoard.AllShipsAreSunk() ? "Computer" : "Player";
+            return AIBoard.AllShipsAreSunk() ? WinnerType.Player : WinnerType.Computer;
         }
 
         public ShotResult PlayPlayerMove(string userShotKey)
         {
             var shotResult = AIBoard.ShootAt(userShotKey);
-            PlayerBoard.ShotResults.Add(shotResult);
+            PlayerBoard.AddShotResult(shotResult);
 
             return shotResult;
         }
 
-        public ShotResult PlayAIMove()
+        public ShotResult PlayAIMove(GameField gameField = null)
         {
-            var gameField = _aiPlayer.GetGameFieldToShoot(AIBoard.ShotResults);
+            gameField ??= _aiPlayer.GetGameFieldToShoot(AIBoard.ShotResults);
+
             var shotResult = PlayerBoard.ShootAt(gameField);
-            AIBoard.ShotResults.Add(shotResult);
+            AIBoard.AddShotResult(shotResult);
 
             return shotResult;
         }

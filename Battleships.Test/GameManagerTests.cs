@@ -1,4 +1,5 @@
 ﻿using Battleships.Service;
+using Battleships.Service.Extensions;
 using Battleships.Service.Models;
 using Battleships.Service.Models.Enums;
 using FluentAssertions;
@@ -28,6 +29,7 @@ namespace Battleships.Test
             // Assert
             using var scope = new AssertionScope();
             _gameManager.Should().NotBeNull();
+            _gameManager.GridSize.Should().Be(10);
 
             AssertGameBoard(_gameManager.AIBoard);
             AssertGameBoard(_gameManager.PlayerBoard);
@@ -69,6 +71,79 @@ namespace Battleships.Test
 
             _gameManager.AIBoard.ShotResults.Should().HaveCount(1);
             _gameManager.PlayerBoard.ShotResults.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void Should_ReturnTrue_WhenShipsWereNotSunk()
+        {
+            // Arrange
+            _gameManager.SetupGame();
+
+            // Act
+            var result = _gameManager.GameIsOn();
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Should_ReturnFalse_WhenShipsWereSunk()
+        {
+            // Arrange
+            _gameManager.SetupGame();
+
+            var fields = _gameManager.AIBoard.Ships.SelectMany(s => s.Fields);
+
+            foreach (var field in fields)
+            {
+                _gameManager.PlayPlayerMove(field.GetShotKey());
+            }
+
+            // Act
+            var result = _gameManager.GameIsOn();
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Should_DeterminePlayerAsWinner_WhenAllAIShipsWereSunk()
+        {
+            // Arrange
+            _gameManager.SetupGame();
+
+            var fields = _gameManager.AIBoard.Ships.SelectMany(s => s.Fields);
+
+            foreach (var field in fields)
+            {
+                _gameManager.PlayPlayerMove(field.GetShotKey());
+            }
+
+            // Act
+            var result = _gameManager.GetWinner();
+
+            // Assert
+            result.Should().Be(WinnerType.Player);
+        }
+
+        [Fact]
+        public void Should_DetermineComputerAsWinner_WhenAllPlayerShipsWereSunk()
+        {
+            // Arrange
+            _gameManager.SetupGame();
+
+            var fields = _gameManager.PlayerBoard.Ships.SelectMany(s => s.Fields);
+
+            foreach (var field in fields)
+            {
+                _gameManager.PlayAIMove(field);
+            }
+
+            // Act
+            var result = _gameManager.GetWinner();
+
+            // Assert
+            result.Should().Be(WinnerType.Computer);
         }
 
         private static void AssertGameBoard(GameBoard gameBoard)
