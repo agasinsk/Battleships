@@ -17,5 +17,10 @@ namespace Battleships.Service.Extensions
 
             return fields;
         }
+
+        public static string GetShotKey(this GameField field)
+        {
+            return $"{field.X.ToLetter()}{field.Y}";
+        }
     }
 }

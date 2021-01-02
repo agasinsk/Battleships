@@ -32,7 +32,7 @@ namespace Battleships.ConsoleUI
 
         private void PlayAIMove()
         {
-            Console.Write("Computers turn: ");
+            _gamePrinter.PrintComputerTurn();
             var aiShotResult = _gameManager.PlayAIMove();
             _gamePrinter.PrintGameField(aiShotResult.GameField);
             _gamePrinter.PrintShotResult(aiShotResult);
@@ -40,10 +40,15 @@ namespace Battleships.ConsoleUI
 
         private void PlayPlayerMove()
         {
-            Console.Write("Shoot at: ");
-            var shotKey = Console.ReadLine();
+            _gamePrinter.PrintPlayerTurn();
+            var shotKey = GetPlayerShotKey();
             var playerShotResult = _gameManager.PlayPlayerMove(shotKey);
             _gamePrinter.PrintShotResult(playerShotResult);
+        }
+
+        private string GetPlayerShotKey()
+        {
+            return Console.ReadLine();
         }
     }
 }
