@@ -12,7 +12,7 @@ namespace Battleships.ConsoleUI
         private readonly PrintableGameBoardConverter _gameBoardConverter;
         private readonly int _gridSize;
 
-        private int DefaultAIPlayerTurnPosition => _gridSize * 2 + 8;
+        private int DefaultAIPlayerTurnPosition => DefaultPlayerTurnPosition + 3;
 
         private int DefaultPlayerTurnPosition => _gridSize * 2 + 3;
 
@@ -21,6 +21,8 @@ namespace Battleships.ConsoleUI
         private int DefaultErrorMessagePosition => DefaultPlayerTurnPosition + 2;
 
         private int DefaultPlayerShipBoardPosition => _gridSize + 2;
+
+        private int DefaultWinnerAnnoucementPosition => DefaultAIPlayerTurnPosition + 2;
 
         public GameConsolePrinter(int gridSize)
         {
@@ -35,16 +37,21 @@ namespace Battleships.ConsoleUI
             PrintShipBoard(gameBoard);
         }
 
-        internal void PrintWinner(string winner)
+        internal void PrintWinner(WinnerType winner)
         {
+            Console.SetCursorPosition(0, DefaultWinnerAnnoucementPosition);
             PrintLineDivider();
-            Console.WriteLine($"And the winner is {winner}");
+           
+            WriteLineInColor(winner == WinnerType.Player ? "You won!" : "Unfortunately you lost...",
+                winner == WinnerType.Player ? ConsoleColor.Cyan : ConsoleColor.DarkRed);
+
+            Console.WriteLine($"\nPress ENTER to quit...");
+            Console.ReadLine();
         }
 
         internal void PrintAIPlayerTurn()
         {
             Console.SetCursorPosition(0, DefaultAIPlayerTurnPosition);
-
             PrintLineDivider();
             Console.Write("Computers turn: ");
         }
@@ -54,14 +61,16 @@ namespace Battleships.ConsoleUI
             switch (shotResult.ShotResultType)
             {
                 case ShotResultType.Miss:
-                    WriteLineInColor($"{shotResult.ShotResultType}", ConsoleColor.Green);
+                    WriteInColor($"{shotResult.ShotResultType}", ConsoleColor.Green);
                     break;
 
                 case ShotResultType.Hit:
                 case ShotResultType.Sunk:
-                    WriteLineInColor($"{shotResult.ShotResultType} — {shotResult.ShipType}", ConsoleColor.Red);
+                    WriteInColor($"{shotResult.ShotResultType} — {shotResult.ShipType}", ConsoleColor.Red);
                     break;
             }
+
+            ClearToEndOfCurrentLine();
         }
 
         internal void PrintPlayerTurn()
@@ -69,19 +78,37 @@ namespace Battleships.ConsoleUI
             Console.SetCursorPosition(0, DefaultPlayerTurnPosition);
             PrintLineDivider();
             Console.Write("\rShoot at: ");
+            ClearToEndOfCurrentLine();
         }
 
-        internal void PrintGameField(GameField gameField) => Console.WriteLine($"{gameField.GetShotKey()}");
+        internal void PrintGameField(GameField gameField)
+        {
+            Console.Write($"{gameField.GetShotKey()}");
+            ClearToEndOfCurrentLine();
+            Console.WriteLine();
+        }
 
         internal void PrintError(string text)
         {
             Console.SetCursorPosition(0, DefaultErrorMessagePosition);
-            WriteLineInColor(text, ConsoleColor.Red);
+            WriteInColor(text, ConsoleColor.Red);
+            ClearToEndOfCurrentLine();
+            Console.WriteLine();
+        }
+
+        private static void ClearToEndOfCurrentLine()
+        {
+            int currentLeft = Console.CursorLeft;
+            int currentTop = Console.CursorTop;
+            Console.Write(new string(' ', Console.WindowWidth - currentLeft));
+            Console.SetCursorPosition(currentLeft, currentTop);
         }
 
         private void PrintLineDivider()
         {
-            Console.WriteLine("——————————————————————");
+            Console.Write("——————————————————————");
+            ClearToEndOfCurrentLine();
+            Console.WriteLine();
         }
 
         private void PrintTargetingBoard(GameBoard gameBoard)
@@ -102,9 +129,9 @@ namespace Battleships.ConsoleUI
 
         private void PrintBoardElements(PrintableBoardElement[][] board)
         {
-            for (int column = 0; column < board.First().Length; column++)
+            for (var column = 0; column < board.First().Length; column++)
             {
-                for (int row = 0; row < board[column].Length; row++)
+                for (var row = 0; row < board[column].Length; row++)
                 {
                     var boardElementValue = $"{board[row][column]?.Value ?? "."} ";
                     var boardElementColor = board[row][column]?.Color ?? ConsoleColor.White;

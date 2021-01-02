@@ -10,7 +10,7 @@ namespace Battleships.Service
 
         public GameBoard PlayerBoard { get; private set; }
 
-        public GameBoard AIBoard { get; set; }
+        public GameBoard AIBoard { get; private set; }
 
         public int GridSize { get; private set; }
 

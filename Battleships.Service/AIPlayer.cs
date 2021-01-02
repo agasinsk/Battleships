@@ -41,7 +41,6 @@ namespace Battleships.Service
 
         private GameField GetMostProbableGameField(IEnumerable<ShotResult> shotResults)
         {
-            // TODO: implement more sophisticated logic maybe?
             var orientation = _random.GetRandomOrientation();
             var lastShotResult = shotResults.Last();
 
