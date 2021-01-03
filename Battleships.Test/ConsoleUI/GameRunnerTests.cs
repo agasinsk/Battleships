@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace Battleships.Test.Service
+namespace Battleships.Test.ConsoleUI
 {
     public class GameRunnerTests
     {
@@ -46,6 +46,7 @@ namespace Battleships.Test.Service
             _gameManagerMock.Verify(p => p.PlayAIMove(null), Times.Once);
             _gameManagerMock.Verify(p => p.GetWinner(), Times.Once);
 
+            _gamePrinterMock.Verify(p => p.PrintGameRules(), Times.Once);
             _gamePrinterMock.Verify(p => p.PrintGameBoard(It.IsAny<GameBoard>()), Times.Exactly(2));
             _gamePrinterMock.Verify(p => p.PrintPlayerTurn(), Times.Once);
             _gamePrinterMock.Verify(p => p.PrintAIPlayerTurn(), Times.Once);
@@ -92,6 +93,7 @@ namespace Battleships.Test.Service
             _gameManagerMock.Verify(p => p.PlayAIMove(null), Times.Exactly(totalTurnsCount));
             _gameManagerMock.Verify(p => p.GetWinner(), Times.Exactly(totalTurnsCount));
 
+            _gamePrinterMock.Verify(p => p.PrintGameRules(), Times.Once);
             _gamePrinterMock.Verify(p => p.PrintGameBoard(It.IsAny<GameBoard>()), Times.Exactly(totalTurnsCount + 1));
             _gamePrinterMock.Verify(p => p.PrintPlayerTurn(), Times.Exactly(totalTurnsCount));
             _gamePrinterMock.Verify(p => p.PrintAIPlayerTurn(), Times.Exactly(totalTurnsCount));
@@ -140,6 +142,7 @@ namespace Battleships.Test.Service
             _gameManagerMock.Verify(p => p.PlayAIMove(null), Times.Once);
             _gameManagerMock.Verify(p => p.GetWinner(), Times.Once);
 
+            _gamePrinterMock.Verify(p => p.PrintGameRules(), Times.Once);
             _gamePrinterMock.Verify(p => p.PrintGameBoard(It.IsAny<GameBoard>()), Times.Exactly(2));
             _gamePrinterMock.Verify(p => p.PrintPlayerTurn(), Times.Exactly(userInputs.Length));
             _gamePrinterMock.Verify(p => p.PrintAIPlayerTurn(), Times.Once);

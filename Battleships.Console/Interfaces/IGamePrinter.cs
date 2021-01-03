@@ -7,6 +7,8 @@ namespace Battleships.ConsoleUI
     {
         void PrintErrorMessage(string message);
 
+        void PrintGameRules();
+
         void PrintGameBoard(GameBoard gameBoard);
 
         void PrintGameField(GameField gameField);

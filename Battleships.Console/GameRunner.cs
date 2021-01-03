@@ -2,7 +2,6 @@
 using Battleships.Service.Interfaces;
 using Battleships.Service.Models.Enums;
 using System;
-using System.Threading;
 
 namespace Battleships.ConsoleUI
 {
@@ -22,6 +21,7 @@ namespace Battleships.ConsoleUI
         public void Run()
         {
             _gameManager.SetupGame();
+            _gamePrinter.PrintGameRules();
             _gamePrinter.PrintGameBoard(_gameManager.PlayerBoard);
 
             var winner = WinnerType.None;

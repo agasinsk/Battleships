@@ -15,19 +15,34 @@ namespace Battleships.ConsoleUI
 
         private int DefaultAIPlayerTurnPosition => DefaultPlayerTurnPosition + 3;
 
-        private int DefaultPlayerTurnPosition => GridSize * 2 + 3;
+        private int DefaultPlayerTurnPosition => DefaultPlayerShipBoardPosition + GridSize + 2;
 
-        private int DefaultPlayerTargetingBoardPosition => 0;
+        private int DefaultPlayerTargetingBoardPosition => 6;
 
         private int DefaultErrorMessagePosition => DefaultPlayerTurnPosition + 2;
 
-        private int DefaultPlayerShipBoardPosition => GridSize + 2;
+        private int DefaultPlayerShipBoardPosition => DefaultPlayerTargetingBoardPosition + GridSize + 2;
 
         private int DefaultWinnerAnnoucementPosition => DefaultAIPlayerTurnPosition + 3;
 
         public ConsoleGamePrinter()
         {
             _gameBoardConverter = new PrintableGameBoardConverter();
+        }
+
+        public void PrintGameRules()
+        {
+            Console.Write("Welcome to Battleships! Each player has 1 Battleship ");
+            WriteInColor("(B) ", ConsoleColor.DarkCyan);
+            Console.Write("and 2 Destroyers ");
+            WriteInColor("(D)", ConsoleColor.DarkYellow);
+            Console.WriteLine(".");
+
+            Console.WriteLine("Enter coordinates (e.g. \"A2\") to specify a square to target.");
+            Console.WriteLine("Shots result in hits, misses or sinks. The game ends when all ships are sunk.");
+            Console.WriteLine();
+            WriteLineInColor("Good luck!", ConsoleColor.Cyan);
+            PrintLineDivider();
         }
 
         public void PrintGameBoard(GameBoard gameBoard)

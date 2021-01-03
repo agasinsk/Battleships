@@ -7,7 +7,7 @@ using FluentAssertions.Execution;
 using System.Linq;
 using Xunit;
 
-namespace Battleships.Test.ConsoleUI
+namespace Battleships.Test.Service
 {
     public class GameManagerTests
     {
