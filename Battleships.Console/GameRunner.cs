@@ -2,6 +2,7 @@
 using Battleships.Service.Interfaces;
 using Battleships.Service.Models.Enums;
 using System;
+using System.Threading;
 
 namespace Battleships.ConsoleUI
 {

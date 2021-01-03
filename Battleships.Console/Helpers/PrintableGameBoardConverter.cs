@@ -23,7 +23,7 @@ namespace Battleships.ConsoleUI
             { ShotResultType.Sunk, ("X", ConsoleColor.Red) },
         };
 
-        internal PrintableBoardElement[][] GetPrintableShipBoard(GameBoard gameBoard)
+        public PrintableBoardElement[][] GetPrintableShipBoard(GameBoard gameBoard)
         {
             var gameBoardElements = GetBasePrintableBoard(gameBoard);
 
@@ -40,7 +40,7 @@ namespace Battleships.ConsoleUI
             return gameBoardElements;
         }
 
-        internal PrintableBoardElement[][] GetPrintableTargetingBoard(GameBoard gameBoard)
+        public PrintableBoardElement[][] GetPrintableTargetingBoard(GameBoard gameBoard)
         {
             var targetingBoard = GetBasePrintableBoard(gameBoard);
 
@@ -56,17 +56,17 @@ namespace Battleships.ConsoleUI
 
         private PrintableBoardElement[][] GetBasePrintableBoard(GameBoard gameBoard)
         {
-            var gridSize = gameBoard.GridSize + 1;
-            var gameBoardElements = Enumerable.Range(-1, gridSize)
+            var printableGridSize = gameBoard.GridSize + 1;
+            var gameBoardElements = Enumerable.Range(-1, printableGridSize)
                 .Select(column =>
                 {
                     if (column < 0)
                     {
-                        return Enumerable.Range(0, gridSize).Select(row => row > 0 ? new PrintableBoardElement(row) : null).ToArray();
+                        return Enumerable.Range(0, printableGridSize).Select(row => row > 0 ? new PrintableBoardElement(row) : null).ToArray();
                     }
                     else
                     {
-                        return Enumerable.Range(-1, gridSize).Select(row => row < 0 ? new PrintableBoardElement(column.ToLetter()) : null).ToArray();
+                        return Enumerable.Range(-1, printableGridSize).Select(row => row < 0 ? new PrintableBoardElement(column.ToLetter()) : null).ToArray();
                     }
                 })
                 .ToArray();

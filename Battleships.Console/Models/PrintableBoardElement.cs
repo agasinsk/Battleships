@@ -1,25 +1,24 @@
-﻿using Battleships.Service.Models;
-using System;
+﻿using System;
 
 namespace Battleships.ConsoleUI.Models
 {
-    internal class PrintableBoardElement
+    public class PrintableBoardElement
     {
-        internal string Value { get; set; }
+        public string Value { get; set; }
 
-        internal ConsoleColor Color { get; set; }
+        public ConsoleColor Color { get; set; }
 
-        internal PrintableBoardElement(string value, ConsoleColor consoleColor = ConsoleColor.Gray)
+        public PrintableBoardElement(string value, ConsoleColor consoleColor = ConsoleColor.Gray)
         {
             Value = value;
             Color = consoleColor;
         }
 
-        internal PrintableBoardElement(char value, ConsoleColor consoleColor = ConsoleColor.Gray) : this(value.ToString(), consoleColor)
+        public PrintableBoardElement(char value, ConsoleColor consoleColor = ConsoleColor.Gray) : this(value.ToString(), consoleColor)
         {
         }
 
-        internal PrintableBoardElement(int value, ConsoleColor consoleColor = ConsoleColor.Gray) : this(value.ToString(), consoleColor)
+        public PrintableBoardElement(int value, ConsoleColor consoleColor = ConsoleColor.Gray) : this(value.ToString(), consoleColor)
         {
         }
 

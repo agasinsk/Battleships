@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace Battleships.Test
+namespace Battleships.Test.Service
 {
     public class ShipBuilderTests
     {

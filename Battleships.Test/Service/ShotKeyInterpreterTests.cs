@@ -3,7 +3,7 @@ using FluentAssertions;
 using System;
 using Xunit;
 
-namespace Battleships.Test
+namespace Battleships.Test.Service
 {
     public class ShotKeyInterpreterTests
     {

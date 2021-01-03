@@ -4,14 +4,14 @@ using FluentAssertions;
 using System.Linq;
 using Xunit;
 
-namespace Battleships.Test
+namespace Battleships.Test.Service
 {
     public class GameBoardBuilderTests
     {
         [Theory]
         [InlineData(10, 1, 2)]
         [InlineData(10, 2, 3)]
-        [InlineData(10, 3, 3)]
+        [InlineData(10, 3, 2)]
         [InlineData(10, 5, 0)]
         [InlineData(15, 2, 3)]
         [InlineData(20, 0, 0)]

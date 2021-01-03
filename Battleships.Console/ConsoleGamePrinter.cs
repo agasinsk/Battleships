@@ -23,7 +23,7 @@ namespace Battleships.ConsoleUI
 
         private int DefaultPlayerShipBoardPosition => GridSize + 2;
 
-        private int DefaultWinnerAnnoucementPosition => DefaultAIPlayerTurnPosition + 2;
+        private int DefaultWinnerAnnoucementPosition => DefaultAIPlayerTurnPosition + 3;
 
         public ConsoleGamePrinter()
         {

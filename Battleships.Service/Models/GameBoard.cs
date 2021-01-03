@@ -8,7 +8,7 @@ namespace Battleships.Service.Models
 {
     public class GameBoard
     {
-        private IList<ShotResult> _shotResults;
+        private readonly IList<ShotResult> _shotResults;
 
         public int GridSize { get; private set; }
 
