@@ -79,6 +79,28 @@ namespace Battleships.Test.Service
             ship.Fields.Last().Should().Be(expectedLastField);
         }
 
+        [Theory]
+        [InlineData(0, -1)]
+        [InlineData(-1, 0)]
+        [InlineData(-1, -1)]
+        public void Should_ThrowException_WithInvalidCriteria(int x, int y)
+        {
+            // Arrange
+            var shipType = ShipType.Battleship;
+            var expectedShipSize = GetExpectedShipSize(shipType);
+            var expectedLastField = GetExpectedLastField(OrientationType.Horizontal, 1, 1, expectedShipSize);
+
+            // Act
+            var exception = Assert.Throws<ArgumentException>(() => new ShipBuilder(shipType)
+                 .OnPosition(new GameField(x, y))
+                 .Build());
+
+            // Assert
+            exception.Should().NotBeNull();
+            exception.Should().BeOfType(typeof(ArgumentException));
+            exception.Message.Should().Be("Invalid ship position");
+        }
+
         private GameField GetExpectedLastField(OrientationType orientation, int x, int y, int expectedShipSize)
         {
             return new GameField(

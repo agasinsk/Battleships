@@ -44,6 +44,8 @@ namespace Battleships.Test.Service
         [InlineData("S4")]
         [InlineData("K1")]
         [InlineData("K11")]
+        [InlineData("A11")]
+        [InlineData("A20")]
         public void Should_ThrowValidationException_WhenInputIsInvalid(string input)
         {
             // Act

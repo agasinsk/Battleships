@@ -11,14 +11,14 @@ namespace Battleships.Service.Builders
     {
         private readonly Random _random;
         private readonly int _gridSize;
+        private readonly int _maxRetriesCount;
         private readonly List<GameField> _occupiedFields;
         private readonly Dictionary<ShipType, int> _shipsConfiguration;
-
-        private int MaxRetriesCount => _gridSize * 10;
 
         public GameBoardBuilder(int gridSize = 10)
         {
             _gridSize = gridSize;
+            _maxRetriesCount = gridSize * 100;
             _random = new Random();
             _occupiedFields = new List<GameField>();
             _shipsConfiguration = new Dictionary<ShipType, int>();
@@ -75,18 +75,22 @@ namespace Battleships.Service.Builders
         {
             int retriesCount = 0;
             var shipSize = GetShipSize(shipType);
-            var maxShipStartPosition = _gridSize - shipSize + 1;
-            var gameField = new GameField(0, 0);
+
+            var maxShipXPosition = orientation == OrientationType.Horizontal
+                ? _gridSize - shipSize + 1 : _gridSize + 1;
+            var maxShipYPosition = orientation == OrientationType.Vertical
+               ? _gridSize - shipSize + 1 : _gridSize + 1;
+            var gameField = new GameField(1, 1);
 
             do
             {
-                if (retriesCount >= MaxRetriesCount)
+                if (retriesCount >= _maxRetriesCount)
                 {
                     throw new ArgumentException($"Could not find free space for {shipType}");
                 }
 
-                gameField.X = _random.Next(1, maxShipStartPosition);
-                gameField.Y = _random.Next(1, maxShipStartPosition);
+                gameField.X = _random.Next(1, maxShipXPosition);
+                gameField.Y = _random.Next(1, maxShipYPosition);
 
                 retriesCount++;
             }
