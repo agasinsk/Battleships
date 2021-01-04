@@ -12,7 +12,7 @@ namespace Battleships.Test.Service
         [InlineData(10, 1, 2)]
         [InlineData(10, 2, 3)]
         [InlineData(10, 3, 2)]
-        [InlineData(10, 4, 0)]
+        [InlineData(12, 4, 0)]
         [InlineData(15, 2, 3)]
         [InlineData(20, 0, 0)]
         public void Should_BuildGameBoard_WithSpecifiedCriteria(int gridSize, int battleshipsCount, int destroyersCount)

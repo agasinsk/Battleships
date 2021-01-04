@@ -1,5 +1,4 @@
-﻿using Battleships.Service.Extensions;
-using Battleships.Service.Models;
+﻿using Battleships.Service.Models;
 using Battleships.Service.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -10,49 +9,83 @@ namespace Battleships.Service
     public class AIPlayer
     {
         private readonly Random _random;
-        private readonly int _gridSize;
+        private readonly GameBoard _gameBoard;
         private readonly int _maxRetriesCount;
 
-        public AIPlayer(int gridSize)
+        private readonly IEnumerable<(int x, int y)> nextPossibleFieldPositions = new[]
         {
-            _gridSize = gridSize;
-            _maxRetriesCount = gridSize * 10;
+            (1, 0),
+            (0, 1),
+            (-1, 0),
+            (0, -1)
+        };
+
+        private IEnumerable<GameField> UsedGameFields => _gameBoard?.ShotResults.Select(x => x.GameField);
+
+        private ShotResult LastShotResult => _gameBoard.ShotResults.Last();
+
+        private GameField LastHitGameField { get; set; }
+
+        public AIPlayer(GameBoard gameBoard)
+        {
             _random = new Random();
+            _gameBoard = gameBoard;
+            _maxRetriesCount = gameBoard.GridSize * 100;
         }
 
-        public GameField GetGameFieldToShoot(IEnumerable<ShotResult> shotResults)
+        public GameField GetGameFieldToShoot()
         {
-            if (!shotResults.Any())
+            if (!UsedGameFields.Any())
             {
-                return GetRandomUnusedGameField(shotResults);
+                return GetRandomUnusedGameField();
             }
 
-            switch (shotResults.Last().ShotResultType)
+            switch (LastShotResult.ShotResultType)
             {
                 case ShotResultType.Hit:
-                    return GetMostProbableGameField(shotResults);
+                    LastHitGameField = LastShotResult.GameField;
+                    return GetMostProbableGameField();
+
+                case ShotResultType.Miss:
+                    return GetMostProbableGameField();
 
                 case ShotResultType.Sunk:
-                case ShotResultType.Miss:
+                    LastHitGameField = null;
+                    return GetRandomUnusedGameField();
+
                 default:
-                    return GetRandomUnusedGameField(shotResults);
+                    return GetRandomUnusedGameField();
             }
         }
 
-        private GameField GetMostProbableGameField(IEnumerable<ShotResult> shotResults)
+        private GameField GetMostProbableGameField()
         {
-            var orientation = _random.GetRandomOrientation();
-            var lastShotResult = shotResults.Last();
+            if (LastHitGameField is null)
+            {
+                return GetRandomUnusedGameField();
+            }
 
-            return new GameField(
-                lastShotResult.GameField.X + (orientation == OrientationType.Horizontal ? 1 : 0),
-                lastShotResult.GameField.Y + (orientation == OrientationType.Vertical ? 1 : 0));
+            var nextGameField = new GameField(1, 1);
+
+            foreach (var (nextX, nextY) in nextPossibleFieldPositions)
+            {
+                nextGameField.X = Math.Max(1, Math.Min(LastHitGameField.X + nextX, _gameBoard.GridSize));
+                nextGameField.Y = Math.Max(1, Math.Min(LastHitGameField.Y + nextY, _gameBoard.GridSize));
+
+                if (!UsedGameFields.Contains(nextGameField))
+                {
+                    break;
+                }
+            }
+
+            return nextGameField;
         }
 
-        private GameField GetRandomUnusedGameField(IEnumerable<ShotResult> shotResults)
+        private GameField GetRandomUnusedGameField()
         {
             var gameField = new GameField(1, 1);
             var retriesCount = 0;
+            var maxPosition = _gameBoard.GridSize + 1;
 
             do
             {
@@ -61,12 +94,12 @@ namespace Battleships.Service
                     break;
                 }
 
-                gameField.X = _random.Next(1, _gridSize + 1);
-                gameField.Y = _random.Next(1, _gridSize + 1);
+                gameField.X = _random.Next(1, maxPosition);
+                gameField.Y = _random.Next(1, maxPosition);
 
                 retriesCount++;
             }
-            while (shotResults.Select(x => x.GameField).Contains(gameField));
+            while (UsedGameFields.Contains(gameField));
 
             return gameField;
         }

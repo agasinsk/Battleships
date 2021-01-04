@@ -29,7 +29,7 @@ namespace Battleships.Service
             PlayerBoard = gameBoardBuilder.Build();
             AIBoard = gameBoardBuilder.Build();
 
-            _aiPlayer = new AIPlayer(GridSize);
+            _aiPlayer = new AIPlayer(AIBoard);
         }
 
         public WinnerType GetWinner()
@@ -57,7 +57,7 @@ namespace Battleships.Service
 
         public ShotResult PlayAIMove(GameField gameField = null)
         {
-            gameField ??= _aiPlayer.GetGameFieldToShoot(AIBoard.ShotResults);
+            gameField ??= _aiPlayer.GetGameFieldToShoot();
 
             var shotResult = PlayerBoard.ShootAt(gameField);
             AIBoard.AddShotResult(shotResult);
