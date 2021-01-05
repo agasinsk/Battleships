@@ -3,10 +3,24 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageId>AG Battleships</PackageId>
+    <Authors>Artur Gasinski</Authors>
+    <Company>Artur Gasinski</Company>
+    <Product>AG Battleships</Product>
+    <Description>Battleships</Description>
+    <PackageIcon>logo.png</PackageIcon>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Battleships.Service\Battleships.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
