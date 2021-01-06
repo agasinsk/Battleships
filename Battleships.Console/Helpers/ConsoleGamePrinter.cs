@@ -11,13 +11,15 @@ namespace Battleships.ConsoleUI.Helpers
     {
         private readonly PrintableGameBoardConverter _gameBoardConverter;
 
+        private int _startingPosition;
+
         private int GridSize { get; set; } = 10;
 
         private int DefaultAIPlayerTurnPosition => DefaultPlayerTurnPosition + 3;
 
         private int DefaultPlayerTurnPosition => DefaultPlayerShipBoardPosition + GridSize + 2;
 
-        private int DefaultPlayerTargetingBoardPosition => 6;
+        private int DefaultPlayerTargetingBoardPosition => _startingPosition + 6;
 
         private int DefaultErrorMessagePosition => DefaultPlayerTurnPosition + 2;
 
@@ -32,6 +34,7 @@ namespace Battleships.ConsoleUI.Helpers
 
         public void PrintGameRules()
         {
+            _startingPosition = Console.CursorTop;
             Console.Write("Welcome to Battleships! Each player has 1 Battleship ");
             WriteInColor("(B) ", ConsoleColor.DarkCyan);
             Console.Write("and 2 Destroyers ");
@@ -48,6 +51,7 @@ namespace Battleships.ConsoleUI.Helpers
         public void PrintGameBoard(GameBoard gameBoard)
         {
             GridSize = gameBoard.GridSize;
+            Console.WriteLine($"starting positon: {_startingPosition}");
             PrintTargetingBoard(gameBoard);
             PrintLineDivider();
             PrintShipBoard(gameBoard);
