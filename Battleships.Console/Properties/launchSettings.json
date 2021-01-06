@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Battleships.ConsoleUI": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
