@@ -5,7 +5,7 @@ using Battleships.Service.Models.Enums;
 using System;
 using System.Linq;
 
-namespace Battleships.ConsoleUI
+namespace Battleships.ConsoleUI.Helpers
 {
     public class ConsoleGamePrinter : IGamePrinter
     {

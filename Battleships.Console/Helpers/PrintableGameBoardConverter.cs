@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Battleships.ConsoleUI
+namespace Battleships.ConsoleUI.Helpers
 {
     public class PrintableGameBoardConverter
     {

@@ -1,4 +1,5 @@
-﻿using Battleships.Service;
+﻿using Battleships.ConsoleUI.Helpers;
+using Battleships.Service;
 
 namespace Battleships.ConsoleUI
 {

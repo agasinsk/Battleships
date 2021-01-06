@@ -1,7 +1,7 @@
 ﻿using Battleships.ConsoleUI.Interfaces;
 using System;
 
-namespace Battleships.ConsoleUI
+namespace Battleships.ConsoleUI.Helpers
 {
     public class ConsoleUserInputProvider : IUserInputProvider
     {
