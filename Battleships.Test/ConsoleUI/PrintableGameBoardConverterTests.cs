@@ -4,6 +4,7 @@ using Battleships.Service.Models;
 using Battleships.Service.Models.Enums;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -41,14 +42,10 @@ namespace Battleships.Test.ConsoleUI
             using var scope = new AssertionScope();
             result.Length.Should().Be(gridSize + 1);
 
-            result[1][2].Should().BeNull();
-            result[2][2].Should().NotBeNull();
-            result[2][2].Value.Should().Be("D");
-            result[3][2].Value.Should().Be("D");
-            result[4][2].Value.Should().Be("D");
-            result[5][2].Value.Should().Be("D");
-            result[6][2].Should().BeNull();
-
+            AssertBoardElement(result[2][2], "D", ConsoleColor.DarkYellow);
+            AssertBoardElement(result[3][2], "D", ConsoleColor.DarkYellow);
+            AssertBoardElement(result[4][2], "D", ConsoleColor.DarkYellow);
+            AssertBoardElement(result[5][2], "D", ConsoleColor.DarkYellow);
             AssertOtherBoardElementsAreEmpty(expectedNotEmptyRows, expectedNotEmptyColumns, result);
         }
 
@@ -74,15 +71,11 @@ namespace Battleships.Test.ConsoleUI
             using var scope = new AssertionScope();
             result.Length.Should().Be(gridSize + 1);
 
-            result[1][5].Should().BeNull();
-            result[2][5].Should().NotBeNull();
-            result[2][5].Value.Should().Be("B");
-            result[3][5].Value.Should().Be("B");
-            result[4][5].Value.Should().Be("B");
-            result[5][5].Value.Should().Be("B");
-            result[6][5].Value.Should().Be("B");
-            result[7][5].Should().BeNull();
-
+            AssertBoardElement(result[2][5], "B", ConsoleColor.DarkCyan);
+            AssertBoardElement(result[3][5], "B", ConsoleColor.DarkCyan);
+            AssertBoardElement(result[4][5], "B", ConsoleColor.DarkCyan);
+            AssertBoardElement(result[5][5], "B", ConsoleColor.DarkCyan);
+            AssertBoardElement(result[6][5], "B", ConsoleColor.DarkCyan);
             AssertOtherBoardElementsAreEmpty(expectedNotEmptyRows, expectedNotEmptyColumns, result);
         }
 
@@ -108,14 +101,18 @@ namespace Battleships.Test.ConsoleUI
             using var scope = new AssertionScope();
             result.Length.Should().Be(gridSize + 1);
 
-            result[1][4].Should().NotBeNull();
-            result[1][4].Value.Should().Be("O");
-            result[5][4].Should().NotBeNull();
-            result[5][4].Value.Should().Be("O");
-            result[8][4].Should().NotBeNull();
-            result[8][4].Value.Should().Be("X");
-
+            AssertBoardElement(result[1][4], "O", ConsoleColor.Green);
+            AssertBoardElement(result[5][4], "O", ConsoleColor.Green);
+            AssertBoardElement(result[8][4], "X", ConsoleColor.Red);
             AssertOtherBoardElementsAreEmpty(expectedNotEmptyRows, expectedNotEmptyColumns, result);
+        }
+
+        private void AssertBoardElement(PrintableBoardElement printableBoardElement, string value, ConsoleColor color)
+        {
+            printableBoardElement.Should().NotBeNull();
+            printableBoardElement.Value.Should().Be(value);
+            printableBoardElement.Color.Should().Be(color);
+            printableBoardElement.ToString().Should().Be(value);
         }
 
         private void AssertOtherBoardElementsAreEmpty(int[] expectedNotEmptyRows, int[] expectedNotEmptyColumns, PrintableBoardElement[][] result)
