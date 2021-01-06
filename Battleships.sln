@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleships.Console", "Battleships.Console\Battleships.Console.csproj", "{200F77A5-D9D4-48A0-98EE-0D6617BE3467}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleships.ConsoleUI", "Battleships.Console\Battleships.ConsoleUI.csproj", "{200F77A5-D9D4-48A0-98EE-0D6617BE3467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleships.Service", "Battleships.Service\Battleships.Service.csproj", "{6BD7E91F-4CE9-4F0C-9DC9-EEC693E1C971}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleships.Service", "Battleships.Service\Battleships.Service.csproj", "{6BD7E91F-4CE9-4F0C-9DC9-EEC693E1C971}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleships.Test", "Battleships.Test\Battleships.Test.csproj", "{84631177-B82D-462F-A43A-6B846AE6D432}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleships.Test", "Battleships.Test\Battleships.Test.csproj", "{84631177-B82D-462F-A43A-6B846AE6D432}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,7 +7,7 @@
     <Authors>Artur Gasinski</Authors>
     <Company>Artur Gasinski</Company>
     <Product>AG Battleships</Product>
-    <Description>Battleships</Description>
+    <Description>Simple console rendintion of classic Battleships board game.</Description>
     <PackageIcon>logo.png</PackageIcon>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
   </PropertyGroup>
